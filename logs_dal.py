@@ -1,10 +1,10 @@
 from datetime import datetime
-from .consts import logs_db_path
 from .db_utils import execute_with_retry
 
 
 class LogsDAL:
-    def __init__(self, job_id: int, job_type: str):
+    def __init__(self, db_path: str, job_id: int, job_type: str):
+        self.db_path = db_path
         self.job_id = job_id
         self.job_type = job_type
 
@@ -19,7 +19,7 @@ class LogsDAL:
                 (datetime.now().isoformat(), log_type, self.job_id, self.job_type, message),
             )
 
-        execute_with_retry(logs_db_path, operation)
+        execute_with_retry(self.db_path, operation)
 
     def log_info(self, message: str):
         self._write_log("INFO", message)
