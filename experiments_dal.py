@@ -1,9 +1,11 @@
 from datetime import datetime
-from .consts import experiments_db_path
 from .db_utils import execute_with_retry
 
 
 class ExperimentsDAL:
+    def __init__(self, db_path: str):
+        self.db_path = db_path
+
     def insert_experiment(
         self,
         slurm_job_id: str,
@@ -40,7 +42,7 @@ class ExperimentsDAL:
                 ),
             )
 
-        execute_with_retry(experiments_db_path, operation)
+        execute_with_retry(self.db_path, operation)
 
     def update_experiment(
         self,
@@ -60,4 +62,4 @@ class ExperimentsDAL:
                 (datetime.now().isoformat(), mean_auc, max_auc, permutation_auc, id),
             )
 
-        execute_with_retry(experiments_db_path, operation)
+        execute_with_retry(self.db_path, operation)
